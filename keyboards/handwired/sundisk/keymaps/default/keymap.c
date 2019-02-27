@@ -15,49 +15,77 @@
  */
 #include QMK_KEYBOARD_H
 
+void user_payload(void);
+
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
-  QMKBEST = SAFE_RANGE,
-  QMKURL
-};
-
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [0] = LAYOUT( /* Base */
-    KC_A,  KC_1,  KC_H, \
-      KC_TAB,  KC_SPC   \
-  ),
+  A2INCIPIT = SAFE_RANGE,
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    case QMKBEST:
+    case A2INCIPIT:
       if (record->event.pressed) {
-        // when keycode QMKBEST is pressed
-        SEND_STRING("QMK is the best thing ever!");
+        //SEND_STRING("A Nefertiti, la grande regina.");
+        user_payload();
       } else {
-        // when keycode QMKBEST is released
-      }
-      break;
-    case QMKURL:
-      if (record->event.pressed) {
-        // when keycode QMKURL is pressed
-        SEND_STRING("https://qmk.fm/" SS_TAP(X_ENTER));
-      } else {
-        // when keycode QMKURL is released
+        //SEND_STRING(SS_TAP(X_ENTER));
+        reset_keyboard();
       }
       break;
   }
   return true;
-}
+};
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+  [0] = {
+    {A2INCIPIT}
+  }
+};
 
 void matrix_init_user(void) {
-
+    
 }
 
 void matrix_scan_user(void) {
-
 }
 
 void led_set_user(uint8_t usb_led) {
+
+}
+
+void keyboard_post_init_user(void) {
+
+}
+
+
+void user_payload(void) {
+
+/*
+ * https://www.hak5.org/gear/duck/what-is-the-best-security-awareness-payload-for-the-usb-rubber-ducky
+DELAY 1000
+ALT F2
+DELAY 50
+GUI SPACE
+DELAY 50
+GUI r
+DELAY 50
+BACKSPACE
+DELAY 100
+STRING http://example.com
+ENTER
+*/
+    _delay_ms(1000);
+    SEND_STRING( SS_LALT(SS_TAP(X_F2)) );
+    _delay_ms(100);
+    SEND_STRING( SS_LGUI(SS_TAP(X_SPACE)) );
+    _delay_ms(100);
+    SEND_STRING( SS_LGUI("r") );
+    _delay_ms(100);
+    SEND_STRING( SS_TAP(X_BSPACE) );
+    _delay_ms(100);
+    SEND_STRING( "https://www.us-cert.gov/ncas/tips/ST08-001" );
+    _delay_ms(100);
+    SEND_STRING( SS_TAP(X_ENTER) );
 
 }
